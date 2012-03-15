@@ -1,0 +1,841 @@
+object frmSkillTester: TfrmSkillTester
+  Left = 479
+  Top = 208
+  Width = 731
+  Height = 551
+  Caption = 'Sir_Pays JOINT skilltester'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Icon.Data = {
+    0000010001002020000001002000A81000001600000028000000200000004000
+    000001002000000000000000000000000000000000000000000000000000FFFF
+    FF93FFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFF
+    FFFEFDFDFDFEFAFAFAFEF3F2F4FEE7E7E6FED4D6D4FEC0C6C1FEB5BCB6FEB3BA
+    B2FEB8BDB8FEC4C7C6FED6D8D6FEE5E6E7FEF1F1F2FEFAF9F9FEFCFCFCFEFFFF
+    FFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFDFFFF
+    FF94FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFEFFFEFFFEFEFEFFFBFB
+    FBFFF0F0F0FFCAD0CBFF94A192FF6D8166FF586F50FF466239FF3D5A2CFF546B
+    46FF4F6743FF586E50FF64765DFF7B8A78FFA6AFA6FFD2D4D3FFE7E7E8FFF5F5
+    F5FFFDFDFDFFFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFFFFFFFFFFFFFFFFFEFFFFFFFEFEFEFFFDFDFDFFF7F6F5FFCCD2
+    CCFF83957FFF556D4EFF506A41FF617851FF667F54FF5B7942FF537438FF839A
+    72FF748D60FF789067FF70885FFF6B815DFF586D4BFF67795DFF98A197FFD0D2
+    D1FFEBEBECFFF9FAFAFFFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFFFFFFFFFFFFFFFFFEFEFEFFFDFCFDFFEFF1F0FFA1AD9FFF657C
+    5FFF4E6B3DFF5D7947FF5A7A40FF57793FFF5A7C43FF678455FF708962FF899C
+    7FFF789169FF738E60FF6D8B56FF73925BFF65844BFF688254FF607354FF7987
+    74FFB8BDB9FFE8E7E8FFFDFCFCFFFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFEFEFFFFFEFEFEFFFDFDFDFFEBEEEDFF8DA08AFF59724DFF627F
+    50FF567A3DFF416921FF3C631BFF768B6CFF9DA89EFFA8B1ABFFAFB8B2FFB4BC
+    B7FFB6BFBAFFB7BEBBFFB1BBB1FF819A6EFF658746FF85A16EFF859E72FF6C82
+    5EFF72836BFFADB4ACFFEBEAEBFFFDFCFCFFFEFEFEFFFFFFFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFEFEFEFFFEFEFDFFF0F2F2FF8C9F86FF4A6836FF5B7D44FF476D
+    2AFF345D12FF375E14FF40661FFF91A18CFFB2BBB6FFB9C2BCFFBFC7C3FFC4CB
+    C8FFC8CECBFFCAD0CDFFCBD1CFFF94A784FF62833EFF6D8B4CFF77955AFF829C
+    69FF7C8F6DFF72826BFFAFB5AEFFEEEDEEFFFCFDFDFFFEFFFEFFFFFFFFFEFFFF
+    FF94FEFEFEFFFEFEFEFFF7F9F8FF9AAC95FF476932FF748F64FF4B702DFF345C
+    12FF385E14FF3E6418FF476D24FF9EAD97FFC2C8C4FFC8CFCAFFCED3D0FFD2D7
+    D5FFD6DAD8FFD9DDDBFFDADEDBFF9DB18CFF678942FF698944FF678844FF7494
+    54FF8FA778FF6B8458FF657A5CFFC2C6C3FFF5F5F4FFFEFEFEFFFFFFFFFEFFFF
+    FF94FEFEFEFFFCFDFCFFC1CDC0FF496D33FF305D09FF446D27FF365D14FF385E
+    15FF3D6419FF436A1CFF4D7329FFA9B8A2FFCED4D1FFD4DAD7FFD9DFDDFFDFE3
+    E1FFE3E6E5FFE5E7E7FFE5E8E7FFA5B893FF6A8E44FF6B8E46FF6B8C46FF698A
+    46FF6A8B49FF608441FF486732FF7A8976FFDDDFDEFFFBFBFBFFFFFFFFFEFFFF
+    FF94FEFEFEFFF0F3F1FF769269FF2F5D0DFF356112FF466A2BFF395F16FF3D64
+    19FF436A1DFF497021FF53792DFFB3C1ACFFDADEDCFFDFE4E2FFE4E9E7FFEAED
+    EBFFEEEFEEFFEFF1F1FFEFF1F0FFABBE97FF6D9146FF6E9147FF6D9047FF6B8C
+    46FF6A8A49FF739356FF567B36FF4B663AFFA5ADA4FFF1F1F1FFFDFDFDFEFDFD
+    FD94FDFCFCFFBCC9B9FF3E6722FF346310FF51743AFF6B835FFF456826FF4A70
+    29FF51762EFF567C32FF61853EFFBBCAB3FFE4E7E5FFE9ECEAFFEEF0EEFFF2F4
+    F2FFF5F6F5FFF7F7F7FFF6F7F6FFB3C4A1FF769951FF779852FF759651FF7192
+    4EFF76935AFF96AA8AFF628546FF47692CFF6D7F66FFDCDEDDFFFBFBFBFEFDFD
+    FD94F7F8F8FF839E76FF356310FF3A661AFF73896BFF99A699FF99A996FFA5B4
+    A2FFB1BEADFFBAC7B5FFC2CEBDFFE0E5E0FFEAECEBFFEEF1EFFFF4F4F4FFF7F7
+    F7FFFAFAFAFFFAFAFAFFFBFBFAFFE9EDE5FFD8E3D1FFD4DFD0FFCED9CAFFC6D1
+    C2FFBCC7B8FFC2CAC5FF829B6EFF4F742EFF486337FFB5BCB5FFF6F6F5FEFDFD
+    FB94E1E9E2FF577F41FF396813FF4F7236FF929F92FFA8B2AAFFB4BEB7FFC5CD
+    C8FFD2D8D3FFDDE1DDFFE0E4E0FFEAECE9FFEDF0EDFFEEF2EDFFF7F8F7FFFAFA
+    F9FFFBFBFCFFF8FAF6FFFCFDFCFFFCFCFBFFFAF9FAFFF2F5F3FFE8ECE9FFE2E6
+    E4FFD5DAD9FFC6CDCAFF9CAB97FF547A35FF3C5E23FF8A9886FFEFEDEEFEFDFD
+    FB94C7D3C4FF47722BFF3E6B1AFF678257FFA0AAA4FF90A18AFF789463FFBEC8
+    BDFFD9DEDAFFBECBB5FF96AF7FFFD1DBC9FFC7D4BEFF9DB587FFE7EBE2FFFBFB
+    FAFFD3DDCAFFA7BC91FFDEE5D7FFFCFCFCFFDBE1D3FFA7BD94FF92AC7AFFA4B7
+    92FFC6D0C5FFC6CDCAFFAFB8B0FF608245FF3F6221FF697D60FFE4E4E4FEFDFB
+    FB94B1C1ACFF487329FF446F21FF7B9073FFA7B1A9FF8BA080FF5D813CFFC1CC
+    BFFFBBC8B2FF7D9D5FFF84A266FFDDE3D8FFBACBACFF799A58FFE4EADEFFD4DE
+    CAFF8DAC6EFF90AD73FFE5EAE0FFE7EBE2FF90AC72FF7B9D5AFF8AA76EFF6B8D
+    48FF88A272FFC0C9C2FFB4BCB6FF6B8957FF40651FFF506C44FFD6D8D7FEFBFB
+    FB94A3B89BFF4D782CFF4B7529FF899B86FFADB6AFFF90A485FF628442FFA4B8
+    94FF7D9C5FFF81A264FFCED9C4FFF7F7F7FFBDCEAEFF7B9C5AFFBBCCACFF8FAC
+    6FFF86A866FFD6DFCDFFFCFBFBFFC6D4B8FF73974FFFC3D0B8FFE7EBE6FFA5B9
+    94FF6C8B4FFFACB8A8FFB3BAB5FF728C63FF3E651BFF446435FFCCD1CDFEF9FB
+    FB94A0B799FF527D32FF50792FFF91A18EFFB2BAB4FF95A88AFF5C8037FF6E91
+    4DFF739551FFCAD7C0FFF7F7F8FFF9FAFAFFBFCFB0FF6F9449FF7D9E58FF7095
+    47FF7C9E59FFBCCBABFFF9FAF8FFBBCCACFF769954FFDAE3D6FFE6E9E8FFD6DC
+    D8FFB8C4B3FFBCC5BDFFAFB7B0FF738C65FF3B6418FF416232FFCACFCBFEF9FB
+    FB94A6BBA0FF59833AFF547D34FF93A392FFB5BDB8FF98AB8DFF688A46FF8AA5
+    73FF678B44FFACC29AFFF5F7F4FFFBFBFBFFC0D0B1FF779A54FFABC095FFB5C7
+    A1FF9BB57EFF7A9B56FFDBE2D5FFB9CBACFF72954EFFD2DCCCFFE2E5E3FFBBC8
+    B5FF8BA27AFFAAB5A8FFAAB2ABFF6D875EFF386114FF416331FFCDD2CFFEFBFD
+    FD94B6C7B2FF628946FF578035FF8FA28BFFB7BEBAFF9BAE90FF6E8E4BFFCCD7
+    C6FFA5BB91FF6D9149FFB2C5A0FFF9FAF8FFC1D1B1FF7D9E5CFFC8D6BCFFDBE4
+    D4FFAFC39DFF72964FFFD2DDCAFFC7D5BEFF658A42FF98B084FFB5C4AAFF7E9A
+    66FF5E7F42FFA3B0A1FFA3ACA6FF607E4EFF335D11FF4B6B3CFFD9DCDAFEFBFD
+    FD94CCD7CAFF6E9254FF5C8539FF869C7CFFB8BFBCFF9CAE93FF729154FFD1DA
+    CDFFE8EDE7FFABC197FF789A55FFD8E2CDFFC1D1B3FF72964EFF789B56FF769A
+    54FF70954CFF9BB683FFE7EDE5FFE9EDE7FF9DB48AFF60853FFF5B8139FF5F80
+    3EFF8B9E7FFFACB6AEFF97A499FF4E7335FF2E590DFF627C56FFE8E8E8FEFDFD
+    FD94E4E9E3FF81A06DFF648C44FF789465FFB5BDB8FFBAC4BBFFB3C1ACFFDEE3
+    E0FFEBEEEEFFEFF2EEFFD1DCC8FFF1F3EEFFE9EEE5FFCEDAC3FFCBDAC1FFC9D8
+    BFFFCDDAC4FFE6ECE5FFEAEEEBFFE6E9E6FFDFE3DEFFBAC7B3FFA7B79FFFACB8
+    A5FFB4BCB5FFA3AEA5FF849481FF3B661EFF2B560CFF869A7FFFF2F3F4FEFDFD
+    FF94F7F9F7FFA1B896FF719653FF6B8E4FFFA6B2A4FFC2C9C5FFCAD1CAFFD6DB
+    D6FFDFE4DFFFE6EBE5FFEBEFE8FFF9F9F7FFF9F9F9FFF8F8F8FFF6F7F7FFF3F6
+    F4FFEFF2F0FFEAEDEBFFE5E8E6FFDBDFDAFFD0D6CFFFC6CFC4FFBCC5BBFFB1BA
+    AFFFA3AEA2FF9BA49DFF658056FF2F5D0CFF365D1DFFB7C2B5FFF9FAFAFEFDFD
+    FD94FDFEFDFFC7D3C4FF809F68FF6B914CFF8BA37CFFA0AF9AFF7B9660FF809C
+    63FF83A065FF85A365FF8BA76EFFD5DECEFFF5F5F5FFF4F4F4FFF1F2F2FFEEF0
+    EEFFE9ECEAFFE4E8E5FFDEE2E0FFA0B391FF678849FF628343FF5B7C3EFF5375
+    38FF55743DFF758A70FF446A2AFF2B5A08FF627F52FFE4E7E7FFFDFCFDFEFDFD
+    FF94FEFEFEFFEFF2EFFFA2B994FF7BA05DFF749557FF839A71FF678746FF6A8C
+    46FF6C8F46FF6D9046FF71944CFFCAD7C2FFECEEECFFEBEDEBFFE9EBE9FFE6E8
+    E6FFE0E5E1FFDAE0DBFFD3DAD4FF8AA276FF48701FFF436B1CFF3D6518FF385F
+    14FF3B5F1AFF4E6F38FF2E5C0AFF315C14FFA5B4A0FFF9F9F9FFFFFFFFFEFFFF
+    FF94FEFEFEFFFDFEFEFFCDD8CAFF8BAA76FF799D58FF6F9250FF658545FF6888
+    46FF6A8B46FF6A8C45FF6D904AFFC2CEBBFFE0E4E2FFDFE3E1FFDCE1DFFFD9DE
+    DCFFD4DAD6FFCED4CFFFC8CEC9FF82996FFF426A1BFF3D6417FF375E13FF3258
+    0FFF2E570BFF315D0DFF2B5A07FF6F8C62FFE9ECEAFFFEFEFEFFFFFFFFFEFFFF
+    FF94FEFEFEFFFEFEFEFFF9FBFAFFBBCDB3FF8AA973FF779C56FF6A8C48FF6585
+    46FF678645FF668742FF698A47FFB8C4B2FFD3D8D6FFD2D7D5FFCFD5D1FFCBD2
+    CEFFC7CDC9FFC1C8C3FFBAC2BCFF789067FF3B6317FF375D13FF315810FF2D56
+    0DFF2E5B0AFF2D5E07FF50783BFFC4CFC5FFFCFCFBFFFEFEFEFFFFFFFFFEFFFF
+    FF94FEFEFEFFFEFFFEFFFEFEFEFFEAEFEAFFB2C6A9FF8CAC73FF779C57FF688C
+    48FF648342FF62813FFF648343FFACB7A6FFC4CAC8FFC3C9C7FFC0C7C3FFBCC3
+    BEFFB7BFBAFFB1BAB4FFAAB3ADFF6C855DFF355C13FF31570EFF2E580CFF305D
+    0CFF32610DFF4A7231FFAFBEAAFFFAF9FAFFFEFEFDFFFEFEFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFEFFFFFFFEFEFEFFFEFDFEFFE3E9E5FFB4C8ACFF8CAB75FF7A9D
+    5BFF698D46FF5F823DFF5D7D3EFF9CA997FFB3BAB7FFB2B9B6FFAFB7B2FFABB3
+    AEFFA6AFA9FFA0AAA4FF99A39DFF617951FF31580EFF315B0EFF34610FFF3666
+    13FF557C3FFFB0BEABFFF9F9FAFFFEFEFEFFFEFEFEFFFFFFFEFFFFFFFFFEFFFF
+    FF94FEFEFEFFFFFFFFFFFEFFFEFFFFFEFEFFFEFDFEFFECF1ECFFBECFB8FF91AD
+    7FFF80A263FF6D914DFF5E843CFF729060FF849A7AFF8D9F89FF90A08EFF8D9E
+    8BFF869784FF798E72FF668058FF466C2BFF386413FF3C6919FF426C23FF7191
+    63FFC0CDBEFFFAFAFBFFFEFEFEFFFEFEFEFFFFFFFEFFFFFFFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFFFFFFFFFFFFFFFFFEFFFEFFFEFEFEFFFEFEFEFFFAFBFBFFD3DC
+    D1FFABC0A0FF88A774FF789B5DFF688F49FF5D843CFF587F37FF557C34FF5179
+    31FF4C742CFF467025FF447021FF477226FF4B742EFF678854FFA2B599FFE2E8
+    E2FFFCFCFCFFFEFEFDFFFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFF
+    FF94FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFEFFFEFFFEFEFEFFFEFE
+    FEFFF3F6F4FFD1DCD0FFB0C3AAFF93AD84FF7F9F6BFF72945BFF698F4FFF658A
+    4AFF628748FF62874CFF6B8E59FF87A27AFFAEC0A7FFDDE4DDFFFBFCFCFFFEFE
+    FEFFFEFEFEFFFEFEFEFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFDFD
+    FD94FEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFE
+    FEFFFEFEFEFFFDFEFDFFFAFBFAFFEDF1EDFFDCE3DBFFCBD7C9FFC2D0BEFFBFCE
+    BBFFC3D0BFFFCEDACDFFE0E8E1FFF3F7F4FFFDFDFCFFFEFEFEFFFEFEFEFFFEFE
+    FEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFEFEFEFFFFFFFFFEFCFC
+    FC55FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFD
+    FD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FBFDFD94FBFDFD94FBFF
+    FD94FDFDFD94FDFDFD94FBFDFD94FDFFFD94FDFDFD94FDFDFD94FDFDFD94FDFD
+    FD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FDFDFD94FFFFFF930000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000000000000000000080000000}
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object dxPageControl1: TdxPageControl
+    Left = 0
+    Top = 0
+    Width = 715
+    Height = 393
+    ActivePage = tsHarry
+    Align = alTop
+    HideButtons = False
+    HotTrack = False
+    MultiLine = False
+    OwnerDraw = False
+    RaggedRight = False
+    ScrollOpposite = False
+    TabHeight = 0
+    TabOrder = 0
+    TabPosition = dxtpTop
+    TabStop = True
+    TabWidth = 0
+    object tsHarry: TdxTabSheet
+      Caption = '17+'
+      object gbUitgangswaarden: TGroupBox
+        Left = 8
+        Top = 8
+        Width = 337
+        Height = 317
+        Caption = 'Uitgangswaarden'
+        TabOrder = 0
+        object Label3: TLabel
+          Left = 12
+          Top = 28
+          Width = 20
+          Height = 13
+          Caption = 'Jaar'
+        end
+        object Label4: TLabel
+          Left = 12
+          Top = 52
+          Width = 32
+          Height = 13
+          Caption = 'Dagen'
+        end
+        object lblSkill1: TLabel
+          Left = 8
+          Top = 143
+          Width = 138
+          Height = 13
+          AutoSize = False
+        end
+        object lblSkill3: TLabel
+          Left = 8
+          Top = 239
+          Width = 137
+          Height = 13
+          AutoSize = False
+        end
+        object Label6: TLabel
+          Left = 144
+          Top = 16
+          Width = 33
+          Height = 13
+          Caption = 'Trainer'
+        end
+        object lblCoach: TLabel
+          Left = 138
+          Top = 62
+          Width = 170
+          Height = 13
+          AutoSize = False
+        end
+        object edStartDagen: TdxMaskEdit
+          Left = 76
+          Top = 48
+          Width = 31
+          TabOrder = 1
+          EditMask = '999;1; '
+          IgnoreMaskBlank = False
+          Text = '0  '
+          StoredValues = 4
+        end
+        object edStartJaar: TdxMaskEdit
+          Left = 76
+          Top = 24
+          Width = 31
+          TabOrder = 0
+          EditMask = '99;1; '
+          IgnoreMaskBlank = False
+          Text = '17'
+          StoredValues = 4
+        end
+        object ieSkill1: TdxImageEdit
+          Left = 8
+          Top = 117
+          Width = 121
+          TabOrder = 2
+          DropDownRows = 9
+          Descriptions.Strings = (
+            'Verdedigen'
+            'Positiespel'
+            'Vleugelspel'
+            'Scoren'
+            'Keepen'
+            'Korte pass'
+            'Spelhervatting'
+            'Spelhervatting + 25%'
+            '')
+          ImageIndexes.Strings = (
+            '0'
+            '1'
+            '2'
+            '3'
+            '4'
+            '5'
+            '6'
+            '7'
+            '8')
+          Values.Strings = (
+            '0.1705'
+            '0.2010'
+            '0.29'
+            '0.1935'
+            '0.31'
+            '0.2180'
+            '0.93'
+            '1.1625'
+            '0')
+        end
+        object tbSkill1: TTrackBar
+          Left = 140
+          Top = 114
+          Width = 170
+          Height = 22
+          Max = 20
+          Orientation = trHorizontal
+          ParentShowHint = False
+          PageSize = 1
+          Frequency = 1
+          Position = 7
+          SelEnd = 0
+          SelStart = 0
+          ShowHint = True
+          TabOrder = 3
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbSkill1Change
+        end
+        object ieSkill3: TdxImageEdit
+          Left = 8
+          Top = 213
+          Width = 121
+          TabOrder = 4
+          DropDownRows = 9
+          Descriptions.Strings = (
+            'Verdedigen'
+            'Positiespel'
+            'Vleugelspel'
+            'Scoren'
+            'Keepen'
+            'Korte pass'
+            'Spelhervatting'
+            'Spelhervatting + 25%'
+            '')
+          ImageIndexes.Strings = (
+            '0'
+            '1'
+            '2'
+            '3'
+            '4'
+            '5'
+            '6'
+            '7'
+            '8')
+          Values.Strings = (
+            '0.1705'
+            '0.2010'
+            '0.29'
+            '0.1935'
+            '0.31'
+            '0.2180'
+            '0.93'
+            '1.1625'
+            '0')
+        end
+        object tbSkill3: TTrackBar
+          Left = 140
+          Top = 211
+          Width = 170
+          Height = 22
+          Max = 20
+          Orientation = trHorizontal
+          ParentShowHint = False
+          PageSize = 1
+          Frequency = 1
+          Position = 5
+          SelEnd = 0
+          SelStart = 0
+          ShowHint = True
+          TabOrder = 5
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbSkill3Change
+        end
+        object tbCoach: TTrackBar
+          Left = 138
+          Top = 30
+          Width = 170
+          Height = 29
+          Max = 8
+          Min = 4
+          Orientation = trHorizontal
+          ParentShowHint = False
+          PageSize = 1
+          Frequency = 1
+          Position = 8
+          SelEnd = 0
+          SelStart = 0
+          ShowHint = True
+          TabOrder = 6
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbCoachChange
+        end
+        object tbSubSkill1: TTrackBar
+          Left = 140
+          Top = 136
+          Width = 170
+          Height = 22
+          Max = 99
+          Orientation = trHorizontal
+          Frequency = 1
+          Position = 0
+          SelEnd = 0
+          SelStart = 0
+          TabOrder = 7
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbSkill1Change
+        end
+        object tbSubSkill3: TTrackBar
+          Left = 140
+          Top = 232
+          Width = 170
+          Height = 22
+          Max = 99
+          Orientation = trHorizontal
+          Frequency = 1
+          Position = 0
+          SelEnd = 0
+          SelStart = 0
+          TabOrder = 8
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbSkill3Change
+        end
+        object pnlSkill2: TPanel
+          Left = 1
+          Top = 160
+          Width = 334
+          Height = 50
+          BevelOuter = bvNone
+          Color = clAppWorkSpace
+          TabOrder = 9
+          object lblSkill2: TLabel
+            Left = 6
+            Top = 30
+            Width = 170
+            Height = 13
+            AutoSize = False
+          end
+          object ieSkill2: TdxImageEdit
+            Left = 6
+            Top = 3
+            Width = 121
+            TabOrder = 0
+            DropDownRows = 9
+            Descriptions.Strings = (
+              'Verdedigen'
+              'Positiespel'
+              'Vleugelspel'
+              'Scoren'
+              'Keepen'
+              'Korte pass'
+              'Spelhervatting'
+              'Spelhervatting + 25%'
+              '')
+            ImageIndexes.Strings = (
+              '0'
+              '1'
+              '2'
+              '3'
+              '4'
+              '5'
+              '6'
+              '7'
+              '8')
+            Values.Strings = (
+              '0.1705'
+              '0.2010'
+              '0.29'
+              '0.1935'
+              '0.31'
+              '0.2180'
+              '0.93'
+              '1.1625'
+              '0')
+          end
+          object tbSkill2: TTrackBar
+            Left = 138
+            Top = 0
+            Width = 170
+            Height = 22
+            Max = 20
+            Orientation = trHorizontal
+            ParentShowHint = False
+            PageSize = 1
+            Frequency = 1
+            Position = 7
+            SelEnd = 0
+            SelStart = 0
+            ShowHint = True
+            TabOrder = 1
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbSkill2Change
+          end
+          object tbSubSkill2: TTrackBar
+            Left = 138
+            Top = 24
+            Width = 170
+            Height = 22
+            Max = 99
+            Orientation = trHorizontal
+            Frequency = 1
+            Position = 0
+            SelEnd = 0
+            SelStart = 0
+            TabOrder = 2
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbSkill2Change
+          end
+        end
+        object Panel1: TPanel
+          Left = 1
+          Top = 259
+          Width = 334
+          Height = 50
+          BevelOuter = bvNone
+          Color = clAppWorkSpace
+          TabOrder = 10
+          object lblSkill4: TLabel
+            Left = 6
+            Top = 30
+            Width = 170
+            Height = 13
+            AutoSize = False
+          end
+          object ieSkill4: TdxImageEdit
+            Left = 6
+            Top = 3
+            Width = 121
+            TabOrder = 0
+            DropDownRows = 9
+            Descriptions.Strings = (
+              'Verdedigen'
+              'Positiespel'
+              'Vleugelspel'
+              'Scoren'
+              'Keepen'
+              'Korte pass'
+              'Spelhervatting'
+              'Spelhervatting + 25%'
+              '')
+            ImageIndexes.Strings = (
+              '0'
+              '1'
+              '2'
+              '3'
+              '4'
+              '5'
+              '6'
+              '7'
+              '8')
+            Values.Strings = (
+              '0.1705'
+              '0.2010'
+              '0.29'
+              '0.1935'
+              '0.31'
+              '0.2180'
+              '0.93'
+              '1.1625'
+              '0')
+          end
+          object tbSkill4: TTrackBar
+            Left = 138
+            Top = 0
+            Width = 170
+            Height = 22
+            Max = 20
+            Orientation = trHorizontal
+            ParentShowHint = False
+            PageSize = 1
+            Frequency = 1
+            Position = 5
+            SelEnd = 0
+            SelStart = 0
+            ShowHint = True
+            TabOrder = 1
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbSkill4Change
+          end
+          object tbSubSkill4: TTrackBar
+            Left = 138
+            Top = 24
+            Width = 170
+            Height = 22
+            Max = 99
+            Orientation = trHorizontal
+            Frequency = 1
+            Position = 0
+            SelEnd = 0
+            SelStart = 0
+            TabOrder = 2
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbSkill4Change
+          end
+        end
+      end
+      object gbSpeler: TGroupBox
+        Left = 352
+        Top = 8
+        Width = 361
+        Height = 317
+        TabOrder = 1
+        object lblHuidig1: TLabel
+          Left = 180
+          Top = 127
+          Width = 170
+          Height = 13
+          AutoSize = False
+        end
+        object lblHuidig3: TLabel
+          Left = 180
+          Top = 223
+          Width = 170
+          Height = 13
+          AutoSize = False
+        end
+        object tbHuidig1: TTrackBar
+          Left = 10
+          Top = 115
+          Width = 170
+          Height = 22
+          Max = 20
+          Orientation = trHorizontal
+          ParentShowHint = False
+          PageSize = 1
+          Frequency = 1
+          Position = 7
+          SelEnd = 0
+          SelStart = 0
+          ShowHint = True
+          TabOrder = 0
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbHuidig1Change
+        end
+        object tbHuidig3: TTrackBar
+          Left = 10
+          Top = 211
+          Width = 170
+          Height = 22
+          Max = 20
+          Orientation = trHorizontal
+          ParentShowHint = False
+          PageSize = 1
+          Frequency = 1
+          Position = 7
+          SelEnd = 0
+          SelStart = 0
+          ShowHint = True
+          TabOrder = 1
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbHuidig3Change
+        end
+        object GroupBox1: TGroupBox
+          Left = 6
+          Top = -1
+          Width = 236
+          Height = 108
+          TabOrder = 2
+          object lblConditie: TLabel
+            Left = 17
+            Top = 91
+            Width = 207
+            Height = 13
+            Alignment = taCenter
+            AutoSize = False
+          end
+          object rgConditie: TRadioGroup
+            Left = 0
+            Top = 1
+            Width = 236
+            Height = 55
+            Caption = 'Conditie'
+            ItemIndex = 0
+            Items.Strings = (
+              'Standaard percentage'
+              'Op laten lopen ahv gewenste conditie')
+            TabOrder = 0
+            OnClick = rgConditieClick
+          end
+          object tbConditie: TTrackBar
+            Left = 17
+            Top = 58
+            Width = 207
+            Height = 29
+            Max = 8
+            Orientation = trHorizontal
+            ParentShowHint = False
+            PageSize = 1
+            Frequency = 1
+            Position = 4
+            SelEnd = 0
+            SelStart = 0
+            ShowHint = True
+            TabOrder = 1
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbConditieChange
+          end
+        end
+        object tbHuidigSub1: TTrackBar
+          Left = 10
+          Top = 136
+          Width = 170
+          Height = 22
+          Max = 99
+          Orientation = trHorizontal
+          Frequency = 1
+          Position = 0
+          SelEnd = 0
+          SelStart = 0
+          TabOrder = 3
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbHuidig1Change
+        end
+        object pnlHuidig2: TPanel
+          Left = 0
+          Top = 161
+          Width = 361
+          Height = 50
+          BevelOuter = bvNone
+          Color = clAppWorkSpace
+          TabOrder = 4
+          object lblHuidig2: TLabel
+            Left = 180
+            Top = 14
+            Width = 170
+            Height = 13
+            AutoSize = False
+          end
+          object tbHuidig2: TTrackBar
+            Left = 10
+            Top = 0
+            Width = 170
+            Height = 22
+            Max = 20
+            Orientation = trHorizontal
+            ParentShowHint = False
+            PageSize = 1
+            Frequency = 1
+            Position = 7
+            SelEnd = 0
+            SelStart = 0
+            ShowHint = True
+            TabOrder = 0
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbHuidig2Change
+          end
+          object tbHuidigSub2: TTrackBar
+            Left = 10
+            Top = 24
+            Width = 170
+            Height = 22
+            Max = 99
+            Orientation = trHorizontal
+            Frequency = 1
+            Position = 0
+            SelEnd = 0
+            SelStart = 0
+            TabOrder = 1
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbHuidig2Change
+          end
+        end
+        object tbHuidigSub3: TTrackBar
+          Left = 10
+          Top = 232
+          Width = 170
+          Height = 22
+          Max = 99
+          Orientation = trHorizontal
+          Frequency = 1
+          Position = 0
+          SelEnd = 0
+          SelStart = 0
+          TabOrder = 5
+          TickMarks = tmBottomRight
+          TickStyle = tsAuto
+          OnChange = tbHuidig3Change
+        end
+        object Panel2: TPanel
+          Left = 0
+          Top = 260
+          Width = 361
+          Height = 50
+          BevelOuter = bvNone
+          Color = clAppWorkSpace
+          TabOrder = 6
+          object lblHuidig4: TLabel
+            Left = 180
+            Top = 14
+            Width = 170
+            Height = 13
+            AutoSize = False
+          end
+          object tbHuidig4: TTrackBar
+            Left = 10
+            Top = 0
+            Width = 170
+            Height = 22
+            Max = 20
+            Orientation = trHorizontal
+            ParentShowHint = False
+            PageSize = 1
+            Frequency = 1
+            Position = 7
+            SelEnd = 0
+            SelStart = 0
+            ShowHint = True
+            TabOrder = 0
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbHuidig4Change
+          end
+          object tbHuidigSub4: TTrackBar
+            Left = 10
+            Top = 24
+            Width = 170
+            Height = 22
+            Max = 99
+            Orientation = trHorizontal
+            Frequency = 1
+            Position = 0
+            SelEnd = 0
+            SelStart = 0
+            TabOrder = 1
+            TickMarks = tmBottomRight
+            TickStyle = tsAuto
+            OnChange = tbHuidig4Change
+          end
+        end
+      end
+      object btnBereken: TButton
+        Left = 12
+        Top = 331
+        Width = 75
+        Height = 25
+        Caption = 'Berekenen'
+        TabOrder = 2
+        OnClick = btnBerekenClick
+      end
+    end
+  end
+  object mmResult: TMemo
+    Left = 0
+    Top = 393
+    Width = 715
+    Height = 122
+    Align = alClient
+    TabOrder = 1
+  end
+end

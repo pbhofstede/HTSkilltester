@@ -1,0 +1,854 @@
+unit formSkilltester;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, dxCntner, dxEditor, dxExEdtr, dxEdLib, ComCtrls, dxPageControl,
+  ExtCtrls;
+
+type
+  TfrmSkillTester = class(TForm)
+    dxPageControl1: TdxPageControl;
+    tsHarry: TdxTabSheet;
+    gbUitgangswaarden: TGroupBox;
+    Label3: TLabel;
+    Label4: TLabel;
+    edStartDagen: TdxMaskEdit;
+    edStartJaar: TdxMaskEdit;
+    ieSkill1: TdxImageEdit;
+    tbSkill1: TTrackBar;
+    lblSkill1: TLabel;
+    lblSkill3: TLabel;
+    ieSkill3: TdxImageEdit;
+    tbSkill3: TTrackBar;
+    gbSpeler: TGroupBox;
+    Label8: TLabel;
+    Label9: TLabel;
+    lblHuidig1: TLabel;
+    lblHuidig3: TLabel;
+    edSpelerDagen: TdxMaskEdit;
+    edSpelerJaar: TdxMaskEdit;
+    tbHuidig1: TTrackBar;
+    tbHuidig3: TTrackBar;
+    btnBereken: TButton;
+    mmResult: TMemo;
+    Label6: TLabel;
+    tbCoach: TTrackBar;
+    lblCoach: TLabel;
+    GroupBox1: TGroupBox;
+    rgConditie: TRadioGroup;
+    tbConditie: TTrackBar;
+    lblConditie: TLabel;
+    tbSubSkill1: TTrackBar;
+    tbSubSkill3: TTrackBar;
+    pnlSkill2: TPanel;
+    ieSkill2: TdxImageEdit;
+    tbSkill2: TTrackBar;
+    tbSubSkill2: TTrackBar;
+    lblSkill2: TLabel;
+    Panel1: TPanel;
+    lblSkill4: TLabel;
+    ieSkill4: TdxImageEdit;
+    tbSkill4: TTrackBar;
+    tbSubSkill4: TTrackBar;
+    tbHuidigSub1: TTrackBar;
+    pnlHuidig2: TPanel;
+    tbHuidig2: TTrackBar;
+    lblHuidig2: TLabel;
+    tbHuidigSub2: TTrackBar;
+    tbHuidigSub3: TTrackBar;
+    Panel2: TPanel;
+    lblHuidig4: TLabel;
+    tbHuidig4: TTrackBar;
+    tbHuidigSub4: TTrackBar;
+    procedure FormCreate(Sender: TObject);
+    procedure tbSkill1Change(Sender: TObject);
+    procedure tbSkill2Change(Sender: TObject);
+    procedure tbSkill3Change(Sender: TObject);
+    procedure tbHuidig1Change(Sender: TObject);
+    procedure tbHuidig2Change(Sender: TObject);
+    procedure tbHuidig3Change(Sender: TObject);
+    procedure tbConditieChange(Sender: TObject);
+    procedure btnBerekenClick(Sender: TObject);
+    procedure tbCoachChange(Sender: TObject);
+    procedure tbSkill4Change(Sender: TObject);
+    procedure tbHuidig4Change(Sender: TObject);
+    procedure rgConditieClick(Sender: TObject);
+  private
+    { Private declarations }
+    FStartSkill1: double;
+    FDoelSkill1: double;
+    FStartSkill2: double;
+    FDoelSkill2: double;
+    FStartSkill3: double;
+    FDoelSkill3: double;
+    FStartSkill4: double;
+    FDoelSkill4: double;
+    function BerekenConditie(aJaar: integer): integer;
+    function HuidigConditieNiveauToPerc(aNiveau, aLeeftijd: integer): integer;
+    function BerekenWeken(aStartJaar, aStartDagen, aEindJaar, aEindDagen: integer): integer;
+    function CalculateDropsOtherSkills(aTrainingSoort: double; aStartJaar, aStartDagen, aEindJaar, aEindDagen: integer): double;
+    function CalculateDropsSkill(aTrainingSoort: String; aStartJaar, aStartDagen, aEindJaar, aEindDagen: integer; aSkill: double): double;
+    function TrainingSoortTostring(aTrainingSoort: String): String;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmSkillTester: TfrmSkillTester;
+
+implementation
+uses
+  Math, uBibConv, uHattrick, uBibIO, uHTTraining;
+
+{$R *.DFM}
+
+procedure TfrmSkillTester.FormCreate(Sender: TObject);
+begin
+  if (uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'StartJaar') > 17) then
+  begin
+    edStartJaar.Text := IntToStr(uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'StartJaar'));
+  end;
+
+  if (uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'StartDagen') > 0) then
+  begin
+    edStartDagen.Text := IntToStr(uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'StartDagen'));
+  end;
+
+  if (uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'Trainer') > 0) then
+  begin
+    tbCoach.Position := uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'Trainer');
+  end;
+
+  tbSkill1Change(nil);
+  tbSkill2Change(nil);
+  tbSkill3Change(nil);
+  tbSkill4Change(nil);
+  tbHuidig1Change(nil);
+  tbHuidig2Change(nil);
+  tbHuidig3Change(nil);
+  tbHuidig4Change(nil);
+
+  rgConditieClick(nil);
+  tbCoachChange(nil);
+
+  if (uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'CondInst') >= 0) then
+  begin
+    rgConditie.ItemIndex := uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'CondInst');
+  end;
+
+  if (uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'CondPerc') > 0) then
+  begin
+    tbConditie.Position := uBibIO.ReadINTFromRegistry('Software\HTSkillTester', 'CondPerc');
+  end;
+end;
+
+function TfrmSkillTester.HuidigConditieNiveauToPerc(aNiveau, aLeeftijd: integer): integer;
+var
+  vDif: integer;
+begin
+  vDif := Ceil((aLeeftijd - 17) * 0.7);
+  case aNiveau of
+    5: Result := 8 + vDif;
+    6: Result := 10 + vDif;
+    7: Result := 12 + vDif;
+    8: Result := 14 + vDif;
+    else
+    begin
+      Result := 5;
+    end;
+  end;
+end;
+
+procedure TfrmSkillTester.tbSkill1Change(Sender: TObject);
+begin
+  lblSkill1.Caption := uHattrick.NivoGetalToText(tbSkill1.Position + (tbSubSkill1.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbSkill2Change(Sender: TObject);
+begin
+  lblSkill2.Caption := uHattrick.NivoGetalToText(tbSkill2.Position + (tbSubSkill2.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbSkill3Change(Sender: TObject);
+begin
+  lblSkill3.Caption := uHattrick.NivoGetalToText(tbSkill3.Position + (tbSubSkill3.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbSkill4Change(Sender: TObject);
+begin
+  lblSkill4.Caption := uHattrick.NivoGetalToText(tbSkill4.Position + (tbSubSkill4.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbHuidig1Change(Sender: TObject);
+begin
+  lblHuidig1.Caption := uHattrick.NivoGetalToText(tbHuidig1.Position + (tbHuidigSub1.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbHuidig2Change(Sender: TObject);
+begin
+  lblHuidig2.Caption := uHattrick.NivoGetalToText(tbHuidig2.Position + (tbHuidigSub2.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbHuidig3Change(Sender: TObject);
+begin
+  lblHuidig3.Caption := uHattrick.NivoGetalToText(tbHuidig3.Position + (tbHuidigSub3.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbHuidig4Change(Sender: TObject);
+begin
+  lblHuidig4.Caption := uHattrick.NivoGetalToText(tbHuidig4.Position + (tbHuidigSub4.Position / 100));
+end;
+
+procedure TfrmSkillTester.tbConditieChange(Sender: TObject);
+begin
+  case rgConditie.ItemIndex of
+    0: lblConditie.Caption := IntToStr(tbConditie.Position) + ' %';
+    1: lblConditie.Caption := 'Huidig niveau: ' + uHattrick.NivoGetalToText(tbConditie.Position);
+  end;
+end;
+
+
+procedure TfrmSkillTester.tbCoachChange(Sender: TObject);
+begin
+  lblCoach.Caption := 'Niveau: ' + uHattrick.NivoGetalToText(tbCoach.Position);
+end;
+
+procedure TfrmSkillTester.btnBerekenClick(Sender: TObject);
+var
+  vStartJaar, vStartDagen: integer;
+  vSpelerJaar, vSpelerDagen: integer;
+  aEindJaar, aEindDagen: integer;
+  vConditie, vBestTrainingDagen, vSpelerTrainingDagen: integer;
+  aStartNiveau, aEindNiveau: double;
+  vExtraTrainingsWeken: double;
+begin
+  uBibIO.WriteINTToRegistry('Software\HTSkillTester', 'StartJaar', uBibConv.AnyStrToInt(edStartJaar.Text));
+  uBibIO.WriteINTToRegistry('Software\HTSkillTester', 'StartDagen', uBibConv.AnyStrToInt(edStartDagen.Text));
+  uBibIO.WriteINTToRegistry('Software\HTSkillTester', 'Trainer', tbCoach.Position);
+  uBibIO.WriteINTToRegistry('Software\HTSkillTester', 'CondInst', rgConditie.ItemIndex);
+  uBibIO.WriteINTToRegistry('Software\HTSkillTester', 'CondPerc', tbConditie.Position);
+
+  mmResult.Lines.Clear;
+
+  
+  FStartSkill1 := tbSkill1.Position + (tbSubSkill1.Position / 100);
+  if (ieSkill1.Text = '') or (ieSkill1.Text = '0') then
+  begin
+    FStartSkill1 := 0;
+  end;
+  
+  FStartSkill2 := tbSkill2.Position + (tbSubSkill2.Position / 100);
+  if (ieSkill2.Text = '') or (ieSkill2.Text = '0') then
+  begin
+    FStartSkill2 := 0;
+  end;
+
+  FStartSkill3 := tbSkill3.Position + (tbSubSkill3.Position / 100);
+  if (ieSkill3.Text = '') or (ieSkill3.Text = '0') then
+  begin
+    FStartSkill3 := 0;
+  end;
+
+  FStartSkill4 := tbSkill4.Position + (tbSubSkill4.Position / 100);
+  if (ieSkill4.Text = '') or (ieSkill4.Text = '0') then
+  begin
+    FStartSkill4 := 0;
+  end;
+
+  if (ieSkill1.Text = '') then
+  begin
+    ShowMessage('Vul minimaal 1 vaardigheid in');
+  end
+  else
+  begin
+    vStartJaar := uBibConv.AnyStrToInt(edStartJaar.Text);
+    vStartDagen := uBibConv.AnyStrToInt(edStartDagen.Text);
+
+    vSpelerJaar := uBibConv.AnyStrToInt(edSpelerJaar.Text);
+    vSpelerDagen := uBibConv.AnyStrToInt(edSpelerDagen.Text);
+    aEindJaar := vStartJaar;
+    aEindDagen := vStartDagen;
+    
+    mmResult.Clear;
+
+    FDoelSkill1 := tbHuidig1.Position + (tbHuidigSub1.Position / 100);
+    FDoelSkill2 := tbHuidig2.Position + (tbHuidigSub2.Position / 100);
+    FDoelSkill3 := tbHuidig3.Position + (tbHuidigSub3.Position / 100);
+    FDoelSkill4 := tbHuidig4.Position + (tbHuidigSub4.Position / 100);
+
+
+    if (FDoelSkill1 > FStartSkill1) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+      aStartNiveau := FStartSkill1;
+      aEindNiveau := Min(FDoelSkill1, 15);
+
+      if (aStartNiveau < aEindNiveau) then
+      begin
+        uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(aStartNiveau),
+          vConditie,
+          Trunc(aEindNiveau),
+          tbCoach.Position,
+          Frac(aStartNiveau),
+          Frac(aEindNiveau),
+          uBibConv.AnyStrToFloat(ieSkill1.Text),
+          aEindJaar,
+          aEindDagen);
+
+        FStartSkill1 := aEindNiveau;
+        if (rgConditie.ItemIndex = 1) then
+        begin
+          mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+        end;
+        mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+          [UpperCase(TrainingSoortTostring(ieSkill1.Text)), uHattrick.NivoGetalToText(aStartNiveau), uHattrick.NivoGetalToText(aEindNiveau), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      end;
+    end;
+
+    if (FDoelSkill2 > FStartSkill2) and
+       (FStartSkill2 > 0) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+      aStartNiveau := FStartSkill2;
+      aEindNiveau := Min(FDoelSkill2, 15);
+
+      if (aStartNiveau < aEindNiveau) then
+      begin
+        uHTTraining .CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(aStartNiveau),
+          vConditie,
+          Trunc(aEindNiveau),
+          tbCoach.Position,
+          Frac(aStartNiveau),
+          Frac(aEindNiveau),
+          uBibConv.AnyStrToFloat(ieSkill2.Text),
+          aEindJaar,
+          aEindDagen);
+
+        FStartSkill2 := aEindNiveau;
+
+        if (rgConditie.ItemIndex = 1) then
+        begin
+          mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+        end;
+        mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+          [UpperCase(TrainingSoortTostring(ieSkill2.Text)), uHattrick.NivoGetalToText(aStartNiveau), uHattrick.NivoGetalToText(aEindNiveau), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      end;
+    end;
+
+    if (FDoelSkill3 > FStartSkill3) and
+       (FStartSkill3 > 0) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+      aStartNiveau := FStartSkill3;
+      aEindNiveau := Min(FDoelSkill3, 15);
+
+      if (aStartNiveau < aEindNiveau) then
+      begin
+        uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(aStartNiveau),
+          vConditie,
+          Trunc(aEindNiveau),
+          tbCoach.Position,
+          Frac(aStartNiveau),
+          Frac(aEindNiveau),
+          uBibConv.AnyStrToFloat(ieSkill3.Text),
+          aEindJaar,
+          aEindDagen);
+
+        FStartSkill3 := aEindNiveau;
+
+        if (rgConditie.ItemIndex = 1) then
+        begin
+          mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+        end;
+        mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+          [UpperCase(TrainingSoortTostring(ieSkill3.Text)), uHattrick.NivoGetalToText(aStartNiveau), uHattrick.NivoGetalToText(aEindNiveau), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      end;
+    end;
+
+    if (FDoelSkill4 > FStartSkill4) and
+       (FStartSkill4 > 0) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+      aStartNiveau := FStartSkill4;
+      aEindNiveau := Min(FDoelSkill4, 15);
+
+      if (aStartNiveau < aEindNiveau) then
+      begin
+        uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(aStartNiveau),
+          vConditie,
+          Trunc(aEindNiveau),
+          tbCoach.Position,
+          Frac(aStartNiveau),
+          Frac(aEindNiveau),
+          uBibConv.AnyStrToFloat(ieSkill4.Text),
+          aEindJaar,
+          aEindDagen);
+
+        FStartSkill4 := aEindNiveau;
+
+        if (rgConditie.ItemIndex = 1) then
+        begin
+          mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+        end;
+        mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+          [UpperCase(TrainingSoortTostring(ieSkill4.Text)), uHattrick.NivoGetalToText(aStartNiveau), uHattrick.NivoGetalToText(aEindNiveau), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      end;
+    end;
+
+    if (FStartSkill1 > FDoelSkill1) then
+    begin
+      vConditie := BerekenConditie(vSpelerJaar);
+      vStartJaar := vSpelerJaar;
+      vStartDagen := vSpelerDagen;
+
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FDoelSkill1),
+          vConditie,
+          Trunc(FStartSkill1),
+          tbCoach.Position,
+          Frac(FDoelSkill1),
+          Frac(FStartSkill1),
+          uBibConv.AnyStrToFloat(ieSkill1.Text),
+          aEindJaar,
+          aEindDagen);
+
+      FDoelSkill1 := FStartSkill1;
+      vSpelerJaar := aEindJaar;
+      vSpelerDagen := aEindDagen;
+
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Extra optrainen %s tot: %d.%d (%d weken)', [TrainingSoortTostring(ieSkill1.Text), vSpelerJaar, vSpelerDagen, BerekenWeken(vStartJaar, vStartDagen, vSpelerJaar, vSpelerDagen)]));
+    end;
+
+    if (FStartSkill2 > FDoelSkill2) then
+    begin
+      vConditie := BerekenConditie(vSpelerJaar);
+      vStartJaar := vSpelerJaar;
+      vStartDagen := vSpelerDagen;
+
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FDoelSkill2),
+          vConditie,
+          Trunc(FStartSkill2),
+          tbCoach.Position,
+          Frac(FDoelSkill2),
+          Frac(FStartSkill2),
+          uBibConv.AnyStrToFloat(ieSkill2.Text),
+          aEindJaar,
+          aEindDagen);
+
+      FDoelSkill2 := FStartSkill2;
+      
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Extra optrainen %s tot: %d.%d (%d weken)', [TrainingSoortTostring(ieSkill2.Text), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+    end;
+
+    if (FStartSkill3 > FDoelSkill3) then
+    begin
+      vConditie := BerekenConditie(vSpelerJaar);
+      vStartJaar := vSpelerJaar;
+      vStartDagen := vSpelerDagen;
+
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FDoelSkill3),
+          vConditie,
+          Trunc(FStartSkill3),
+          tbCoach.Position,
+          Frac(FDoelSkill3),
+          Frac(FStartSkill3),
+          uBibConv.AnyStrToFloat(ieSkill3.Text),
+          aEindJaar,
+          aEindDagen);
+
+      FDoelSkill3 := FStartSkill3;
+      vSpelerJaar := aEindJaar;
+      vSpelerDagen := aEindDagen;
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Extra optrainen %s tot: %d.%d (%d weken)', [TrainingSoortTostring(ieSkill3.Text), vSpelerJaar, vSpelerDagen, BerekenWeken(vStartJaar, vStartDagen, vSpelerJaar, vSpelerDagen)]));
+    end;
+
+    if (FStartSkill4 > FDoelSkill4) then
+    begin
+      vConditie := BerekenConditie(vSpelerJaar);
+      vStartJaar := vSpelerJaar;
+      vStartDagen := vSpelerDagen;
+
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FDoelSkill4),
+          vConditie,
+          Trunc(FStartSkill4),
+          tbCoach.Position,
+          Frac(FDoelSkill4),
+          Frac(FStartSkill4),
+          uBibConv.AnyStrToFloat(ieSkill4.Text),
+          aEindJaar,
+          aEindDagen);
+
+      FDoelSkill4 := FStartSkill4;
+      vSpelerJaar := aEindJaar;
+      vSpelerDagen := aEindDagen;
+
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Extra optrainen %s tot: %d.%d (%d weken)', [TrainingSoortTostring(ieSkill4.Text), vSpelerJaar, vSpelerDagen, BerekenWeken(vStartJaar, vStartDagen, vSpelerJaar, vSpelerDagen)]));
+    end;
+
+    if (FDoelSkill1 > 15) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FStartSkill1),
+          vConditie,
+          Trunc(FDoelSkill1),
+          tbCoach.Position,
+          Frac(FStartSkill1),
+          Frac(FDoelSkill1),
+          uBibConv.AnyStrToFloat(ieSkill1.Text),
+          aEindJaar,
+          aEindDagen);
+
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+        [UpperCase(TrainingSoortTostring(ieSkill1.Text)), uHattrick.NivoGetalToText(FStartSkill1), uHattrick.NivoGetalToText(FDoelSkill1), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      
+      FStartSkill1 := FDoelSkill1;
+    end;
+
+    if (FDoelSkill2 > 15) and
+       (FStartSkill2 > 0) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+      
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FStartSkill2),
+          vConditie,
+          Trunc(FDoelSkill2),
+          tbCoach.Position,
+          Frac(FStartSkill2),
+          Frac(FDoelSkill2),
+          uBibConv.AnyStrToFloat(ieSkill2.Text),
+          aEindJaar,
+          aEindDagen);
+
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+        [UpperCase(TrainingSoortTostring(ieSkill2.Text)), uHattrick.NivoGetalToText(FStartSkill2), uHattrick.NivoGetalToText(FDoelSkill2), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+
+      FStartSkill2 := FDoelSkill2;
+
+      vExtraTrainingsWeken := CalculateDropsOtherSkills(uBibConv.AnyStrToFloat(ieSkill2.Text), vStartJaar, vStartDagen, aEindJaar, aEindDagen);
+      if (vExtraTrainingsWeken > 0) then
+      begin
+        aEindDagen := aEindDagen + Ceil(vExtraTrainingsWeken * 7);
+        if (aEindDagen > 111) then
+        begin
+          aEindDagen := aEindDagen - 112;
+          aEindJaar := aEindJaar + 1;
+        end;
+      end;
+    end;
+
+    if (FDoelSkill3 > 15) and
+       (FStartSkill3 > 0) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FStartSkill3),
+          vConditie,
+          Trunc(FDoelSkill3),
+          tbCoach.Position,
+          Frac(FStartSkill3),
+          Frac(FDoelSkill3),
+          uBibConv.AnyStrToFloat(ieSkill3.Text),
+          aEindJaar,
+          aEindDagen);
+
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+        [UpperCase(TrainingSoortTostring(ieSkill3.Text)), uHattrick.NivoGetalToText(FStartSkill3), uHattrick.NivoGetalToText(FDoelSkill3), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+
+      FStartSkill3 := FDoelSkill3;
+
+      vExtraTrainingsWeken := CalculateDropsOtherSkills(uBibConv.AnyStrToFloat(ieSkill3.Text), vStartJaar, vStartDagen, aEindJaar, aEindDagen);
+      if (vExtraTrainingsWeken > 0) then
+      begin
+        aEindDagen := aEindDagen + Ceil(vExtraTrainingsWeken * 7);
+        if (aEindDagen > 111) then
+        begin
+          aEindDagen := aEindDagen - 112;
+          aEindJaar := aEindJaar + 1;
+        end;
+      end;
+    end;
+
+    if (FDoelSkill4 > 15) and
+       (FStartSkill4 > 0) then
+    begin
+      vConditie := BerekenConditie(aEindJaar);
+      vStartJaar := aEindJaar;
+      vStartDagen := aEindDagen;
+      
+      uHTTraining.CalculateTraining(
+          vStartJaar,
+          vStartDagen,
+          Trunc(FStartSkill4),
+          vConditie,
+          Trunc(FDoelSkill4),
+          tbCoach.Position,
+          Frac(FStartSkill4),
+          Frac(FDoelSkill4),
+          uBibConv.AnyStrToFloat(ieSkill4.Text),
+          aEindJaar,
+          aEindDagen);
+
+      if (rgConditie.ItemIndex = 1) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [vConditie]));
+      end;
+      mmResult.Lines.Add(Format('Optrainen %s van %s naar %s bereikt op %d.%d (%d weken)',
+        [UpperCase(TrainingSoortTostring(ieSkill4.Text)), uHattrick.NivoGetalToText(FStartSkill4), uHattrick.NivoGetalToText(FDoelSkill4), aEindJaar, aEindDagen, BerekenWeken(vStartJaar, vStartDagen, aEindJaar, aEindDagen)]));
+      
+      FStartSkill4 := FDoelSkill4;
+
+      vExtraTrainingsWeken := CalculateDropsOtherSkills(uBibConv.AnyStrToFloat(ieSkill4.Text), vStartJaar, vStartDagen, aEindJaar, aEindDagen);
+      if (vExtraTrainingsWeken > 0) then
+      begin
+        aEindDagen := aEindDagen + Ceil(vExtraTrainingsWeken * 7);
+        if (aEindDagen > 111) then
+        begin
+          aEindDagen := aEindDagen - 112;
+          aEindJaar := aEindJaar + 1;
+        end;
+      end;
+    end;
+
+    mmResult.Lines.Add('-------------');
+    if (rgConditie.ItemIndex = 0) then
+      begin
+        mmResult.Lines.Add(Format('Conditiepercentage: %d', [tbConditie.Position]));
+      end;
+    vSpelerTrainingDagen := ((vSpelerJaar - vStartJaar) * 112) + vSpelerDagen;
+    vBestTrainingDagen := ((aEindJaar - vStartJaar) * 112) + aEindDagen;
+    mmResult.Lines.Add(Format('Leeftijd deze speler                  : %d.%d = %d dagen training (%d weken)', [vSpelerJaar, vSpelerDagen, vSpelerTrainingDagen, Ceil(vSpelerTrainingDagen / 7)]));
+    mmResult.Lines.Add(Format('Leeftijd speler optimale training: %d.%d = %d dagen training (%d weken)', [aEindJaar, aEindDagen, vBestTrainingDagen, Ceil(vBestTrainingDagen / 7)]));
+
+    if (vSpelerTrainingDagen > vBestTrainingDagen) then
+    begin
+      mmResult.Lines.Add(Format('Trainingsachterstand: %.2f weken', [(vSpelerTrainingDagen - vBestTrainingDagen) / 7 ]));
+    end;
+
+    if (vSpelerTrainingDagen > 0) and
+       (vBestTrainingDagen < vSpelerTrainingDagen) then
+    begin
+      mmResult.Lines.Add(Format('Pays-index: %.2f', [(vBestTrainingDagen / vSpelerTrainingDagen) * 100]));
+    end
+    else
+    begin
+      if (vBestTrainingDagen > vSpelerTrainingDagen) then
+      begin
+        mmResult.Lines.Add(Format('Pays-index: %.2f weken trainingsvoorsprong', [(vBestTrainingDagen - vSpelerTrainingDagen) / 7]));
+      end
+      else
+      begin
+        mmResult.Lines.Add('Pays-index: 100');
+      end;
+    end;
+  end;
+end;
+
+function TfrmSkillTester.BerekenWeken(aStartJaar, aStartDagen, aEindJaar, aEindDagen: integer): integer;
+begin
+  Result := (aEindJaar - aStartJaar) * 16;
+
+  Result := Result + Ceil((aEindDagen - aStartDagen) / 7);
+end;
+
+function TfrmSkillTester.CalculateDropsOtherSkills(aTrainingSoort: double; aStartJaar, aStartDagen, aEindJaar, aEindDagen: integer): double;
+begin
+  Result := 0;
+  
+  if (ieSkill1.Text <> '') and
+     (ieSkill1.Text <> '0') and
+     (aTrainingSoort <> uBibConv.AnyStrToFloat(ieSkill1.Text)) then
+  begin
+    Result := Result + CalculateDropsSkill(ieSkill1.Text, aStartJaar, aStartDagen, aEindJaar, aEindDagen, FStartSkill1);
+  end;
+
+  if (ieSkill2.Text <> '') and
+     (ieSkill2.Text <> '0') and
+     (aTrainingSoort <> uBibConv.AnyStrToFloat(ieSkill2.Text)) then
+  begin
+    Result := Result + CalculateDropsSkill(ieSkill2.Text, aStartJaar, aStartDagen, aEindJaar, aEindDagen, FStartSkill2);
+  end;
+
+  if (ieSkill3.Text <> '') and
+     (ieSkill3.Text <> '0') and
+     (aTrainingSoort <> uBibConv.AnyStrToFloat(ieSkill3.Text)) then
+  begin
+    Result := Result + CalculateDropsSkill(ieSkill3.Text, aStartJaar, aStartDagen, aEindJaar, aEindDagen, FStartSkill3);
+  end;
+
+  if (ieSkill4.Text <> '') and
+     (ieSkill4.Text <> '0') and
+     (aTrainingSoort <> uBibConv.AnyStrToFloat(ieSkill4.Text)) then
+  begin
+    Result := Result + CalculateDropsSkill(ieSkill4.Text, aStartJaar, aStartDagen, aEindJaar, aEindDagen, FStartSkill4);
+  end;
+end;
+
+function TfrmSkillTester.CalculateDropsSkill(aTrainingSoort: String; aStartJaar, aStartDagen, aEindJaar, aEindDagen: integer; aSkill: double): double;
+var
+  drop: double;
+  aStartLeeftijd, aEindLeeftijd: double;
+begin
+  Result := 0;
+  
+  if (aSkill>15) then
+  begin
+    drop := (0.00112/3)*(Math.Power((aSkill-15),3)-Math.Power((aSkill-16),3));
+
+    aStartLeeftijd := aStartJaar + (aStartDagen / 112);
+    aEindLeeftijd := aEindJaar + (aEindDagen / 112);
+
+    while ((aEindLeeftijd - aStartLeeftijd) > 1) do
+    begin
+      Result := Result + 1/(1-drop*16);
+
+      aStartJaar := aStartJaar + 1;
+      aStartLeeftijd := aStartJaar + (aStartDagen / 112);
+    end;
+
+    Result := Result + (aEindLeeftijd - aStartLeeftijd)/(1-drop*((aEindLeeftijd - aStartLeeftijd))*16);
+
+    if (Result > 0) then
+    begin
+      mmResult.Lines.Add(Format('Extra training %s nodig wegens skilldrops: %.2f weken', [UpperCase(TrainingSoortTostring(aTrainingSoort)), Result]));
+    end;
+  end
+end;
+
+function TfrmSkillTester.TrainingSoortTostring(aTrainingSoort: String): String;
+var
+  vIndex: integer;
+begin
+  Result := '';
+
+  if (aTrainingSoort = ieSkill1.Text) then
+  begin
+    vIndex := ieSkill1.Values.IndexOf(ieSkill1.Text);
+    Result := ieSkill1.Descriptions[vIndex];
+  end;
+  if (aTrainingSoort = ieSkill2.Text) then
+  begin
+    vIndex := ieSkill2.Values.IndexOf(ieSkill2.Text);
+    Result := ieSkill2.Descriptions[vIndex];
+  end;
+  if (aTrainingSoort = ieSkill3.Text) then
+  begin
+    vIndex := ieSkill3.Values.IndexOf(ieSkill3.Text);
+    Result := ieSkill3.Descriptions[vIndex];
+  end;
+  if (aTrainingSoort = ieSkill4.Text) then
+  begin
+    vIndex := ieSkill4.Values.IndexOf(ieSkill4.Text);
+    Result := ieSkill4.Descriptions[vIndex];
+  end;
+end;
+
+procedure TfrmSkillTester.rgConditieClick(Sender: TObject);
+begin
+  case rgConditie.ItemIndex of
+    0:
+    begin
+      tbConditie.Min := 5;
+      tbConditie.Max := 60;
+    end;
+    1:
+    begin
+      tbConditie.Min := 1;
+      tbConditie.Max := 8;
+    end;
+  end;
+
+  tbConditieChange(nil);
+end;
+
+
+function TfrmSkillTester.BerekenConditie(aJaar: integer): integer;
+begin
+  case rgConditie.ItemIndex of
+    0: Result := tbConditie.Position;
+    1: Result := HuidigConditieNiveauToPerc(tbConditie.Position, aJaar);
+    else
+      Result := 0;
+  end;
+end;
+
+end.
